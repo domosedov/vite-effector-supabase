@@ -5,7 +5,12 @@ export const overlay = style({
   backgroundColor: vars.color.black,
   position: "fixed",
   inset: 0,
-  animation: `${overlayShow} 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+
+  "@media": {
+    "(prefers-reduced-motion: no-preference)": {
+      animation: `${overlayShow} 2s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+    },
+  },
 });
 
 export const content = style({
@@ -21,7 +26,11 @@ export const content = style({
   maxWidth: "450px",
   maxHeight: "85vh",
   padding: 25,
-  animation: `${contentShow} 150ms cubic-bezier(0.16, 1, 0.3, 1) forwards`,
 
-  ":focus": { outline: "none" },
+  "@media": {
+    "(prefers-reduced-motion: no-preference)": {
+      animation: `${contentShow} 2s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+      ":focus": { outline: "none" },
+    },
+  },
 });

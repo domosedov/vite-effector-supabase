@@ -1,5 +1,5 @@
 import * as React from "react";
-import { DemoDialog } from "~/shared/ui/button/dialog";
+import { DemoDialog } from "~/shared/ui/dialog";
 
 export const HomePage: React.FC = () => {
   return (

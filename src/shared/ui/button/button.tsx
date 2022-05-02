@@ -4,11 +4,11 @@ import * as styles from "./button.css";
 
 export const Button = React.forwardRef<
   HTMLButtonElement,
-  React.ComponentProps<"button">
->(({ className, ...restProps }, forwardedRef) => (
+  React.ComponentProps<"button"> & styles.ButtonVariants
+>(({ className, color, ...restProps }, forwardedRef) => (
   <button
     ref={forwardedRef}
-    className={clsx(styles.button, className)}
+    className={clsx(styles.button({ color }), className)}
     {...restProps}
   />
 ));

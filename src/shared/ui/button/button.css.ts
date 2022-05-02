@@ -1,7 +1,9 @@
 import { style } from "@vanilla-extract/css";
+import { recipe } from "@vanilla-extract/recipes";
+import type { RecipeVariants } from "@vanilla-extract/recipes";
 import { sprinkles, vars } from "~/styles";
 
-export const button = style([
+export const buttonBase = style([
   sprinkles({
     paddingX: {
       mobile: "10",
@@ -13,15 +15,30 @@ export const button = style([
   {
     border: "none",
     borderRadius: vars.space["1"],
-    backgroundColor: vars.color.lime["500"],
-    color: vars.color.white,
     fontWeight: "bold",
     textTransform: "uppercase",
     transitionDuration: "0.2s",
     cursor: "pointer",
-
-    ":hover": {
-      backgroundColor: vars.color.lime["400"],
-    },
+    color: vars.color.white,
   },
 ]);
+
+export const button = recipe({
+  base: [buttonBase],
+  variants: {
+    color: {
+      primary: {
+        backgroundColor: vars.color.lime["500"],
+      },
+      secondary: {
+        backgroundColor: vars.color.fuchsia["500"],
+      },
+    },
+  },
+
+  defaultVariants: {
+    color: "primary",
+  },
+});
+
+export type ButtonVariants = RecipeVariants<typeof button>;
