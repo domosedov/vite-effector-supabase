@@ -11,6 +11,10 @@ export const buttonBase = style([
       tablet: "2",
     },
     paddingY: "2",
+    color: {
+      lightMode: "gray-900",
+      darkMode: "blue-100",
+    },
   }),
   {
     border: "none",
@@ -19,12 +23,12 @@ export const buttonBase = style([
     textTransform: "uppercase",
     transitionDuration: "0.2s",
     cursor: "pointer",
-    color: vars.color.white,
+    // color: vars.color.white,
   },
 ]);
 
 export const button = recipe({
-  base: [buttonBase],
+  base: buttonBase,
   variants: {
     color: {
       primary: {

@@ -1,9 +1,4 @@
-export const color = {
-  inherit: "inherit",
-  current: "currentColor",
-  transparent: "transparent",
-  black: "#000",
-  white: "#fff",
+const palette = {
   slate: {
     50: "#f8fafc",
     100: "#f1f5f9",
@@ -268,4 +263,13 @@ export const color = {
     800: "#9f1239",
     900: "#881337",
   },
+} as const;
+
+export const color = {
+  inherit: "inherit",
+  current: "currentColor",
+  transparent: "transparent",
+  black: "#000",
+  white: "#fff",
+  ...palette,
 } as const;
