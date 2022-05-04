@@ -23,7 +23,6 @@ export const buttonBase = style([
     textTransform: "uppercase",
     transitionDuration: "0.2s",
     cursor: "pointer",
-    // color: vars.color.white,
   },
 ]);
 

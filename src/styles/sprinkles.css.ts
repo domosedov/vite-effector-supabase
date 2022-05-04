@@ -1,7 +1,9 @@
 import { createGlobalTheme, keyframes } from "@vanilla-extract/css";
 import { defineProperties, createSprinkles } from "@vanilla-extract/sprinkles";
 import { color } from "./color";
+import { height } from "./height";
 import { space } from "./space";
+import { width } from "./width";
 
 export const overlayShow = keyframes({
   "0%": { opacity: 0 },
@@ -16,6 +18,14 @@ export const contentShow = keyframes({
 export const vars = createGlobalTheme(":root", {
   space,
   color,
+  width: {
+    ...space,
+    ...width,
+  },
+  height: {
+    ...space,
+    ...height,
+  },
 });
 
 const responsiveProperties = defineProperties({
