@@ -8,7 +8,7 @@ export const overlay = style({
 
   "@media": {
     "(prefers-reduced-motion: no-preference)": {
-      animation: `${overlayShow} 2s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+      animation: `${overlayShow} 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards`,
     },
   },
 });
@@ -29,7 +29,7 @@ export const content = style({
 
   "@media": {
     "(prefers-reduced-motion: no-preference)": {
-      animation: `${contentShow} 2s cubic-bezier(0.16, 1, 0.3, 1) forwards`,
+      animation: `${contentShow} 200ms cubic-bezier(0.16, 1, 0.3, 1) forwards`,
       ":focus": { outline: "none" },
     },
   },

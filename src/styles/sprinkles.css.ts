@@ -7,7 +7,7 @@ import { width } from "./width";
 
 export const overlayShow = keyframes({
   "0%": { opacity: 0 },
-  "100%": { opacity: 1 },
+  "100%": { opacity: 0.25 },
 });
 
 export const contentShow = keyframes({
