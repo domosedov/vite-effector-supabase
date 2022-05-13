@@ -1,19 +1,20 @@
-import { useRoutes, type RouteObject } from "react-router-dom";
+import type { RouteObject } from "react-router-dom";
 import { HomePage } from "./home";
+import { TodoPage } from "./todo";
 
-export const pageLinks = {
+export const paths = {
   home: () => "/",
+  todos: () => "/todos",
+  todo: (id: `${number}` | number | ":id") => `/todos/${id}`,
 };
 
-export const pagePaths = {
-  home: "/",
-};
-
-const routes: RouteObject[] = [
+export const routes: RouteObject[] = [
   {
-    path: pagePaths.home,
+    path: paths.home(),
     element: <HomePage />,
   },
+  {
+    path: paths.todo(":id"),
+    element: <TodoPage />,
+  },
 ];
-
-export const Routes = () => useRoutes(routes);

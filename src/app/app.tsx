@@ -1,7 +1,7 @@
 import * as React from "react";
-import { unstable_HistoryRouter as Router } from "react-router-dom";
+import { unstable_HistoryRouter as Router, useRoutes } from "react-router-dom";
 import { history } from "~/history";
-import { Routes } from "~/pages";
+import { routes } from "~/pages";
 import { NavLink } from "~/shared/ui/nav_link";
 import "./app.css";
 
@@ -17,4 +17,9 @@ export const App: React.FC = () => {
       </Router>
     </div>
   );
+};
+
+const Routes: React.FC = () => {
+  const pages = useRoutes(routes);
+  return pages;
 };
