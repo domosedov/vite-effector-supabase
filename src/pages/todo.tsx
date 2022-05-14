@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useParams } from "react-router-dom";
 
-const TodoPage: React.FC = () => {
+export const TodoPage: React.FC = () => {
   const { id } = useParams();
   return (
     <div>
@@ -9,5 +9,3 @@ const TodoPage: React.FC = () => {
     </div>
   );
 };
-
-export { TodoPage as default };

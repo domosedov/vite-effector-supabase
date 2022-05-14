@@ -1,8 +1,9 @@
 import * as React from "react";
 import type { RouteObject } from "react-router-dom";
+import { lazyLoad } from "~/shared/libs/lazy_load";
 import { HomePage } from "./home";
 
-const TodoPage = React.lazy(() => import("./todo"));
+const TodoPage = lazyLoad(() => import("./todo"), "TodoPage");
 
 export const paths = {
   home: () => "/",
