@@ -1,1 +1,1 @@
-export { DemoDialog } from "./dialog";
+export * as Dialog from './dialog'

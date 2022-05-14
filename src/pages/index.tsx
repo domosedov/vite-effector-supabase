@@ -8,7 +8,7 @@ export const paths = {
   home: () => '/',
   todos: () => '/todos',
   todo: (id: `${number}` | number | ':id') => `/todos/${id}`,
-}
+} as const
 
 export const routes: RouteObject[] = [
   {
