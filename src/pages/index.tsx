@@ -1,15 +1,14 @@
-import * as React from "react";
-import type { RouteObject } from "react-router-dom";
-import { lazyLoad } from "~/shared/libs/lazy_load";
-import { HomePage } from "./home";
+import * as React from 'react'
+import type { RouteObject } from 'react-router-dom'
+import { HomePage } from './home'
 
-const TodoPage = lazyLoad(() => import("./todo"), "TodoPage");
+const TodoPage = React.lazy(() => import('./todo').then(module => ({ default: module.TodoPage })))
 
 export const paths = {
-  home: () => "/",
-  todos: () => "/todos",
-  todo: (id: `${number}` | number | ":id") => `/todos/${id}`,
-};
+  home: () => '/',
+  todos: () => '/todos',
+  todo: (id: `${number}` | number | ':id') => `/todos/${id}`,
+}
 
 export const routes: RouteObject[] = [
   {
@@ -17,11 +16,11 @@ export const routes: RouteObject[] = [
     element: <HomePage />,
   },
   {
-    path: paths.todo(":id"),
+    path: paths.todo(':id'),
     element: (
-      <React.Suspense fallback="loading...">
+      <React.Suspense fallback='loading...'>
         <TodoPage />
       </React.Suspense>
     ),
   },
-];
+]
