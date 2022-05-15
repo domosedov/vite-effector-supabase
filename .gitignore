@@ -25,3 +25,6 @@ dist-ssr
 
 # Etc
 tsconfig.tsbuildinfo
+
+# env
+.env
