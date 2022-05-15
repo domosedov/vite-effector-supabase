@@ -6,10 +6,12 @@
     "dev": "vite",
     "build": "tsc && vite build",
     "preview": "vite preview",
-    "test": "vitest"
+    "test": "vitest",
+    "types:generate": "openapi-typescript https://tyksrvynnikwgqzrclkm.supabase.co/rest/v1/?apikey=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InR5a3Nydnlubmlrd2dxenJjbGttIiwicm9sZSI6ImFub24iLCJpYXQiOjE2NTEwODAxODksImV4cCI6MTk2NjY1NjE4OX0.Z8_rMHHoCJJU1KFy9qvv9j44WR17CnJtK7-mXbqc0pY --version=2 --output ./src/shared/types/generated.ts"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^0.1.7",
+    "@supabase/supabase-js": "^1.35.3",
     "@vanilla-extract/babel-plugin": "^1.1.6",
     "@vanilla-extract/css": "^1.7.0",
     "@vanilla-extract/dynamic": "^2.0.2",
@@ -17,7 +19,10 @@
     "@vanilla-extract/sprinkles": "^1.4.1",
     "@vanilla-extract/vite-plugin": "^3.1.6",
     "clsx": "^1.1.1",
+    "effector": "^22.3.0",
+    "effector-react": "^22.0.6",
     "history": "^5.3.0",
+    "patronum": "^1.8.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",
     "react-error-boundary": "^3.1.4",
@@ -41,6 +46,7 @@
     "eslint-plugin-react": "^7.29.4",
     "eslint-plugin-react-hooks": "^4.5.0",
     "jsdom": "^19.0.0",
+    "openapi-typescript": "^5.3.0",
     "prettier": "^2.6.2",
     "typescript": "^4.6.4",
     "vite": "^2.9.9",
