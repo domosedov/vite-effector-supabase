@@ -1,10 +1,17 @@
 import { createStore, createEvent, createEffect, sample } from 'effector'
 import type { ApiError, PostgrestError } from '@supabase/supabase-js'
-import type { definitions } from '~/shared/types/generated'
 import type { Nullable } from '~/shared/types/utils'
 import { supabaseClient } from '~/supabase'
 
-export type Todo = definitions['todos']
+export type Todo = {
+  id: string
+  created_at: string
+  profile_id: string
+  title: string
+  description?: string
+  is_completed: boolean
+  completed_at?: string
+}
 
 export const fetchTodos = createEvent()
 export const fetchTodosFx = createEffect<void, Nullable<Todo[]>, ApiError | PostgrestError>()
@@ -19,7 +26,6 @@ sample({
 })
 
 fetchTodosFx.use(async () => {
-  const result = await supabaseClient.from<Todo>('todos').select('*')
-  if (result.error) throw result.error
-  return result.data
+  const { data } = await supabaseClient.from<Todo>('todos').select('*').throwOnError(true)
+  return data
 })
