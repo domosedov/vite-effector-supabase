@@ -1,6 +1,13 @@
-import type { UserCredentials, AuthChangeEvent, Session, User } from '@supabase/supabase-js'
-import { createEvent, createEffect, createStore, sample, attach } from 'effector'
+import type {
+  UserCredentials,
+  AuthChangeEvent,
+  Session,
+  User,
+  ApiError,
+} from '@supabase/supabase-js'
+import { createEvent, createEffect, createStore, sample } from 'effector'
 import { debug } from 'patronum'
+import { status } from 'patronum/status'
 import type { Nullable } from '~/shared/types/utils'
 import { supabaseClient } from '~/supabase'
 
@@ -24,27 +31,33 @@ sample({
 })
 
 // Get user
-export const getUser = createEvent<JWTAccessToken>()
-const getUserFx = createEffect<
+export const getUserByToken = createEvent<JWTAccessToken>()
+const getUserByTokenFx = createEffect<
   JWTAccessToken,
-  Awaited<ReturnType<typeof supabaseClient.auth.api.getUser>>
+  Awaited<ReturnType<typeof supabaseClient.auth.api.getUser>>,
+  ApiError
 >()
 
-$user.on(getUserFx.doneData, (_, { user }) => user)
+$user.on(getUserByTokenFx.doneData, (_, { user }) => user)
 
 sample({
-  clock: getUser,
-  target: getUserFx,
+  clock: getUserByToken,
+  target: getUserByTokenFx,
 })
 
-getUserFx.use(token => supabaseClient.auth.api.getUser(token))
+getUserByTokenFx.use(async token => {
+  const result = await supabaseClient.auth.api.getUser(token)
+  if (result.error) throw result.error
+  return result
+})
 
 // Sign in
 export const signInViaCredentials =
   createEvent<Required<Pick<UserCredentials, 'email' | 'password'>>>()
 const signInFx = createEffect<
   UserCredentials,
-  Awaited<ReturnType<typeof supabaseClient.auth.signIn>>
+  ReturnType<typeof supabaseClient.auth.signIn>,
+  ApiError
 >()
 
 sample({
@@ -52,25 +65,38 @@ sample({
   target: signInFx,
 })
 
-signInFx.use(credentials => supabaseClient.auth.signIn(credentials))
+signInFx.use(async credentials => {
+  const result = await supabaseClient.auth.signIn(credentials)
+  if (result.error) throw result.error
+  return result
+})
 
 // Sign out
 export const signOut = createEvent()
-const signOutFx = createEffect<void, Awaited<ReturnType<typeof supabaseClient.auth.signOut>>>()
+const signOutFx = createEffect<
+  void,
+  Awaited<ReturnType<typeof supabaseClient.auth.signOut>>,
+  ApiError
+>()
 
 sample({
   clock: signOut,
   target: signOutFx,
 })
 
-signOutFx.use(() => supabaseClient.auth.signOut())
+signOutFx.use(async () => {
+  const result = await supabaseClient.auth.signOut()
+  if (result.error) throw result.error
+  return result
+})
 
 // Sign up
 export const signUpViaCredentials =
   createEvent<Required<Pick<UserCredentials, 'email' | 'password'>>>()
 const signUpFx = createEffect<
   UserCredentials,
-  Awaited<ReturnType<typeof supabaseClient.auth.signUp>>
+  Awaited<ReturnType<typeof supabaseClient.auth.signUp>>,
+  ApiError
 >()
 
 sample({
@@ -78,17 +104,31 @@ sample({
   target: signUpFx,
 })
 
-signUpFx.use(credentials => supabaseClient.auth.signUp(credentials))
+signUpFx.use(async credentials => {
+  const result = await supabaseClient.auth.signUp(credentials)
+  if (result.error) throw result.error
+  return result
+})
 
 // Validate user
 export const validateUser = createEvent()
-const validateUserFx = attach({ effect: getUserFx })
+export const validateUserFx = createEffect<
+  void,
+  Awaited<ReturnType<typeof supabaseClient.auth.api.getUser>>,
+  ApiError
+>()
+export const $validateUserStatus = status({ effect: validateUserFx })
 
 sample({
   clock: validateUser,
-  source: $accessToken,
-  filter: (token): token is JWTAccessToken => !!token,
   target: validateUserFx,
 })
 
-debug($isSignedIn)
+validateUserFx.use(async () => {
+  const session = supabaseClient.auth.session()
+  const result = await supabaseClient.auth.api.getUser(String(session?.access_token))
+  if (result.error) throw result.error
+  return result
+})
+
+debug(validateUserFx.failData)
