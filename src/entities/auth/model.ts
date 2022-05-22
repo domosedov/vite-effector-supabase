@@ -131,4 +131,4 @@ validateUserFx.use(async () => {
   return result
 })
 
-debug(validateUserFx.failData)
+debug(authStateChanged)

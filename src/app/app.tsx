@@ -15,6 +15,7 @@ export const App: React.FC = () => {
         <nav>
           <NavLink to='/'>Home</NavLink>
           <NavLink to='/about'>About</NavLink>
+          <NavLink to='/signup'>Signup</NavLink>
         </nav>
         <Routes />
       </Router>
