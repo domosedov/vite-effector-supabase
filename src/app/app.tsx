@@ -2,22 +2,21 @@ import * as React from 'react'
 import { unstable_HistoryRouter as Router, useRoutes } from 'react-router-dom'
 import { history } from '~/history'
 import { routes } from '~/pages'
-import { NavLink } from '~/shared/ui/nav_link'
-import '~/styles/normalize.css'
-import './app.css'
 import * as appModel from './model'
+import '../styles/index.css'
+import { Navbar } from '~/widgets/navbar'
 
 export const App: React.FC = () => {
   return (
     <div>
       <appModel.AppGate />
       <Router history={history}>
-        <nav>
-          <NavLink to='/'>Home</NavLink>
-          <NavLink to='/about'>About</NavLink>
-          <NavLink to='/signup'>Signup</NavLink>
-        </nav>
-        <Routes />
+        <header className='bg-green-300'>
+          <Navbar />
+        </header>
+        <main>
+          <Routes />
+        </main>
       </Router>
     </div>
   )

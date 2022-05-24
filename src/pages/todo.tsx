@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useEvent, useStore } from 'effector-react'
 import { useParams } from 'react-router-dom'
-import { Button } from '~/shared/ui/button'
 import { todoModel } from '~/entities/todo'
 import { profileModel } from '~/entities/profile'
 
@@ -19,9 +18,9 @@ export const TodoPage: React.FC = () => {
   return (
     <div>
       <h1>Todo page #{id}</h1>
-      <Button type='button' onClick={handleClick} color='secondary'>
+      <button type='button' onClick={handleClick}>
         Fetch todos
-      </Button>
+      </button>
       <div>
         <h2>Profiles</h2>
         <pre>{JSON.stringify(profiles, null, 2)}</pre>
