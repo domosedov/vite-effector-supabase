@@ -1,7 +1,8 @@
 import * as React from 'react'
 import { RouteObject } from 'react-router-dom'
 import { HomePage } from './home'
-import * as RootLayout from './root.layout'
+import { Root } from './root'
+import { SignInPage } from './signin'
 import { SignUpPage } from './signup'
 
 const TodoPage = React.lazy(() => import('./todo').then(module => ({ default: module.TodoPage })))
@@ -11,13 +12,14 @@ export const paths = {
   todos: () => '/todos',
   todo: (id: `${number}` | number | ':id') => `/todos/${id}`,
   signup: () => '/signup',
+  signin: () => '/signin',
 } as const
 
 export const routes: RouteObject[] = [
   {
     path: paths.home(),
-    element: <RootLayout.Page />,
-    loader: RootLayout.loader,
+    element: <Root />,
+    loader: Root.loader,
     children: [
       {
         index: true,
@@ -34,6 +36,10 @@ export const routes: RouteObject[] = [
       {
         path: paths.signup(),
         element: <SignUpPage />,
+      },
+      {
+        path: paths.signin(),
+        element: <SignInPage />,
       },
     ],
   },

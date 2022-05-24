@@ -1,17 +1,16 @@
 import * as React from 'react'
-import { Outlet, type LoaderFunction } from 'react-router-dom'
+import { Outlet } from 'react-router-dom'
 import { allSettled } from 'effector'
 import { Navbar } from '~/widgets/navbar'
 import { scope } from '~/scope'
 import { authModel } from '~/entities/auth'
+import type { Page } from '~/shared/types/app'
+import { NavigationWatcher } from '~/shared/router/watcher'
 
-export const loader: LoaderFunction = async () => {
-  await allSettled(authModel.validateUser, { scope })
-}
-
-export const Page: React.FC = () => {
+export const Root: Page = () => {
   return (
     <React.Fragment>
+      <NavigationWatcher />
       <header className='bg-green-300'>
         <Navbar />
       </header>
@@ -20,4 +19,8 @@ export const Page: React.FC = () => {
       </main>
     </React.Fragment>
   )
+}
+
+Root.loader = async () => {
+  await allSettled(authModel.validateUser, { scope })
 }

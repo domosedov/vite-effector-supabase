@@ -5,9 +5,11 @@ import type {
   User,
   ApiError,
 } from '@supabase/supabase-js'
-import { createEvent, createEffect, createStore, sample } from 'effector'
-import { debug } from 'patronum'
+import { createEvent, createEffect, createStore, sample, scopeBind } from 'effector'
 import { status } from 'patronum/status'
+import { NavigateFunction } from 'react-router-dom'
+import { scope } from '~/scope'
+import { routerModel } from '~/shared/router'
 import type { Nullable } from '~/shared/types/utils'
 import { supabaseClient } from '~/supabase'
 
@@ -20,7 +22,10 @@ export const $user = createStore<Nullable<User>>(supabaseClient.auth.session()?.
 export const $accessToken = $session.map(session => session?.access_token ?? null)
 export const $isSignedIn = $user.map(user => !!user)
 
-supabaseClient.auth.onAuthStateChange((event, session) => authStateChanged({ event, session }))
+supabaseClient.auth.onAuthStateChange((event, session) => {
+  const changed = scopeBind(authStateChanged, { scope })
+  changed({ event, session })
+})
 
 $session.on(authStateChanged, (_, { session }) => session)
 
@@ -56,13 +61,20 @@ export const signInViaCredentials =
   createEvent<Required<Pick<UserCredentials, 'email' | 'password'>>>()
 const signInFx = createEffect<
   UserCredentials,
-  ReturnType<typeof supabaseClient.auth.signIn>,
+  Awaited<ReturnType<typeof supabaseClient.auth.signIn>>,
   ApiError
 >()
 
 sample({
   clock: signInViaCredentials,
   target: signInFx,
+})
+
+sample({
+  clock: signInFx.done,
+  source: routerModel.$navigate,
+  filter: (navigate): navigate is NavigateFunction => typeof navigate === 'function',
+  target: createEffect<NavigateFunction, void>(navigate => navigate('/')),
 })
 
 signInFx.use(async credentials => {
@@ -114,7 +126,7 @@ signUpFx.use(async credentials => {
 export const validateUser = createEvent()
 export const validateUserFx = createEffect<
   void,
-  Awaited<ReturnType<typeof supabaseClient.auth.api.getUser>>,
+  Nullable<Awaited<ReturnType<typeof supabaseClient.auth.api.getUser>>>,
   ApiError
 >()
 export const $validateUserStatus = status({ effect: validateUserFx })
@@ -125,10 +137,9 @@ sample({
 })
 
 validateUserFx.use(async () => {
-  const session = supabaseClient.auth.session()
-  const result = await supabaseClient.auth.api.getUser(String(session?.access_token))
+  const token = supabaseClient.auth.session()?.access_token
+  if (!token) return null
+  const result = await supabaseClient.auth.api.getUser(token)
   if (result.error) throw result.error
   return result
 })
-
-debug(authStateChanged)
