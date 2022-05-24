@@ -1,6 +1,7 @@
 import * as React from 'react'
-import type { RouteObject } from 'react-router-dom'
+import { RouteObject } from 'react-router-dom'
 import { HomePage } from './home'
+import * as RootLayout from './root.layout'
 import { SignUpPage } from './signup'
 
 const TodoPage = React.lazy(() => import('./todo').then(module => ({ default: module.TodoPage })))
@@ -15,18 +16,25 @@ export const paths = {
 export const routes: RouteObject[] = [
   {
     path: paths.home(),
-    element: <HomePage />,
-  },
-  {
-    path: paths.todo(':id'),
-    element: (
-      <React.Suspense fallback='loading...'>
-        <TodoPage />
-      </React.Suspense>
-    ),
-  },
-  {
-    path: paths.signup(),
-    element: <SignUpPage />,
+    element: <RootLayout.Page />,
+    loader: RootLayout.loader,
+    children: [
+      {
+        index: true,
+        element: <HomePage />,
+      },
+      {
+        path: paths.todo(':id'),
+        element: (
+          <React.Suspense fallback='loading...'>
+            <TodoPage />
+          </React.Suspense>
+        ),
+      },
+      {
+        path: paths.signup(),
+        element: <SignUpPage />,
+      },
+    ],
   },
 ]

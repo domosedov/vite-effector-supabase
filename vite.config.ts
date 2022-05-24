@@ -4,7 +4,14 @@ import react from '@vitejs/plugin-react'
 import * as path from 'node:path'
 
 export default defineConfig({
-  plugins: [react()],
+  plugins: [
+    react({
+      babel: {
+        presets: ['patronum/babel-preset'],
+        plugins: [['effector/babel-plugin', { reactSsr: true }]],
+      },
+    }),
+  ],
   resolve: {
     alias: {
       '~': path.resolve(__dirname, './src'),

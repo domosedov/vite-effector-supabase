@@ -3,6 +3,7 @@ import type { ApiError, PostgrestError, User } from '@supabase/supabase-js'
 import type { Nullable } from '~/shared/types/utils'
 import { supabaseClient } from '~/supabase'
 import { authModel } from '../auth'
+import { debug } from 'patronum'
 
 export type Profile = {
   id: string
@@ -35,6 +36,8 @@ $profiles.on(fetchProfilesFx.doneData, (_, profiles) => profiles ?? [])
 
 sample({
   clock: getProfiles,
+  source: $profiles,
+  filter: profiles => profiles.length === 0,
   target: fetchProfilesFx,
 })
 
@@ -65,3 +68,5 @@ createProfileFx.use(async inputs => {
     .single()
   return data
 })
+
+debug(fetchProfilesFx)

@@ -12,7 +12,8 @@ export const HomePage: React.FC = () => {
 }
 
 const LoginForm: React.FC = () => {
-  const [signIn, signOut] = useEvent([authModel.signInViaCredentials, authModel.signOut])
+  const signIn = useEvent(authModel.signInViaCredentials)
+  const signOut = useEvent(authModel.signOut)
   const emailRef = React.useRef<HTMLInputElement>(null)
   const passwordRef = React.useRef<HTMLInputElement>(null)
   const emailId = React.useId()
@@ -28,7 +29,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <div>
-      <button type='button' onClick={() => signOut()}>
+      <button type='button' onClick={signOut}>
         Sign out
       </button>
       <form onSubmit={handleSubmit}>
