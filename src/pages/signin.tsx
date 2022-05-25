@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { useEvent } from 'effector-react'
 import type { Page } from '~/shared/types/app'
-import { authModel } from '~/entities/auth'
+import { signInFeatureModel } from '~/features/sign_in'
 
 export const SignInPage: Page = () => {
   return (
@@ -13,8 +13,7 @@ export const SignInPage: Page = () => {
 }
 
 const LoginForm: React.FC = () => {
-  const signIn = useEvent(authModel.signInViaCredentials)
-  const signOut = useEvent(authModel.signOut)
+  const signIn = useEvent(signInFeatureModel.signIn)
   const emailRef = React.useRef<HTMLInputElement>(null)
   const passwordRef = React.useRef<HTMLInputElement>(null)
   const emailId = React.useId()
@@ -30,9 +29,6 @@ const LoginForm: React.FC = () => {
 
   return (
     <div>
-      <button type='button' onClick={signOut}>
-        Sign out
-      </button>
       <form onSubmit={handleSubmit}>
         <div className='flex flex-col items-start gap-y-4'>
           <div>

@@ -1,5 +1,5 @@
 import { createEffect, createEvent, createStore, sample } from 'effector'
-import { authModel } from '~/entities/auth'
+import { authModel } from '~/shared/auth'
 
 const $appIsReady = createStore(false)
 const $appIsNotReady = $appIsReady.map(v => !v)

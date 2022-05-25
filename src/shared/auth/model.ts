@@ -8,10 +8,7 @@ import type {
 import { createEvent, createEffect, createStore, sample, scopeBind, split } from 'effector'
 import { debug } from 'patronum'
 import { status } from 'patronum/status'
-import { NavigateFunction } from 'react-router-dom'
-import { paths } from '~/pages'
 import { scope } from '~/scope'
-import { routerModel } from '~/shared/router'
 import type { Nullable } from '~/shared/types/utils'
 import { supabaseClient } from '~/supabase'
 
@@ -63,7 +60,7 @@ getUserByTokenFx.use(async token => {
 // Sign in
 export const signInViaCredentials =
   createEvent<Required<Pick<UserCredentials, 'email' | 'password'>>>()
-const signInFx = createEffect<
+export const signInFx = createEffect<
   UserCredentials,
   Awaited<ReturnType<typeof supabaseClient.auth.signIn>>,
   ApiError
@@ -82,7 +79,7 @@ signInFx.use(async credentials => {
 
 // Sign out
 export const signOut = createEvent()
-const signOutFx = createEffect<
+export const signOutFx = createEffect<
   void,
   Awaited<ReturnType<typeof supabaseClient.auth.signOut>>,
   ApiError
@@ -141,16 +138,9 @@ validateUserFx.use(async () => {
   return result
 })
 
-const { signedIn: _, signedOut } = split(authStateChangedEvent, {
+const { signedIn: _, signedOut: __ } = split(authStateChangedEvent, {
   signedIn: event => event === 'SIGNED_IN',
   signedOut: event => event === 'SIGNED_OUT',
-})
-
-sample({
-  clock: signedOut,
-  source: routerModel.$navigate,
-  filter: (navigate): navigate is NavigateFunction => typeof navigate === 'function',
-  target: createEffect<NavigateFunction, void>(navigate => navigate(paths.signin())),
 })
 
 debug(authStateChangedEvent)

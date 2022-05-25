@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useEvent } from 'effector-react'
-import { authModel } from '~/entities/auth'
+import { authModel } from '~/shared/auth'
 
 export const SignUpForm: React.FC = () => {
   const emailId = React.useId()

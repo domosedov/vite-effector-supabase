@@ -2,7 +2,7 @@ import { createEvent, createEffect, createStore, sample } from 'effector'
 import type { ApiError, PostgrestError, User } from '@supabase/supabase-js'
 import type { Nullable } from '~/shared/types/utils'
 import { supabaseClient } from '~/supabase'
-import { authModel } from '../auth'
+import { authModel } from '~/shared/auth'
 import { debug } from 'patronum'
 
 export type Profile = {
@@ -68,5 +68,3 @@ createProfileFx.use(async inputs => {
     .single()
   return data
 })
-
-debug(fetchProfilesFx)
