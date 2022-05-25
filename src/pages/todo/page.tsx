@@ -3,8 +3,9 @@ import { useEvent, useStore } from 'effector-react'
 import { useParams } from 'react-router-dom'
 import { todoModel } from '~/entities/todo'
 import { profileModel } from '~/entities/profile'
+import type { Page } from '~/shared/types/app'
 
-export const TodoPage: React.FC = () => {
+export const TodoPage: Page = () => {
   const { id } = useParams()
   const [fetchTodos, getProfiles] = useEvent([todoModel.fetchTodos, profileModel.getProfiles])
   const todos = useStore(todoModel.$todos)

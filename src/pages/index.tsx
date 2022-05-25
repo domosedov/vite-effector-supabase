@@ -4,8 +4,11 @@ import { HomePage } from './home'
 import { Root } from './root'
 import { SignInPage } from './signin'
 import { SignUpPage } from './signup'
+import { loader as todoLoader } from './todo/loader'
 
-const TodoPage = React.lazy(() => import('./todo').then(module => ({ default: module.TodoPage })))
+const TodoPage = React.lazy(() =>
+  import('./todo/page').then(module => ({ default: module.TodoPage })),
+)
 
 export const paths = {
   home: () => '/',
@@ -32,6 +35,7 @@ export const routes: RouteObject[] = [
             <TodoPage />
           </React.Suspense>
         ),
+        loader: todoLoader,
       },
       {
         path: paths.signup(),

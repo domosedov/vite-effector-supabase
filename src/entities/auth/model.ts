@@ -5,9 +5,11 @@ import type {
   User,
   ApiError,
 } from '@supabase/supabase-js'
-import { createEvent, createEffect, createStore, sample, scopeBind } from 'effector'
+import { createEvent, createEffect, createStore, sample, scopeBind, split } from 'effector'
+import { debug } from 'patronum'
 import { status } from 'patronum/status'
 import { NavigateFunction } from 'react-router-dom'
+import { paths } from '~/pages'
 import { scope } from '~/scope'
 import { routerModel } from '~/shared/router'
 import type { Nullable } from '~/shared/types/utils'
@@ -16,6 +18,8 @@ import { supabaseClient } from '~/supabase'
 type JWTAccessToken = string
 
 const authStateChanged = createEvent<{ event: AuthChangeEvent; session: Nullable<Session> }>()
+
+const authStateChangedEvent = authStateChanged.map(({ event }) => event)
 
 export const $session = createStore<Nullable<Session>>(supabaseClient.auth.session())
 export const $user = createStore<Nullable<User>>(supabaseClient.auth.session()?.user ?? null)
@@ -68,13 +72,6 @@ const signInFx = createEffect<
 sample({
   clock: signInViaCredentials,
   target: signInFx,
-})
-
-sample({
-  clock: signInFx.done,
-  source: routerModel.$navigate,
-  filter: (navigate): navigate is NavigateFunction => typeof navigate === 'function',
-  target: createEffect<NavigateFunction, void>(navigate => navigate('/')),
 })
 
 signInFx.use(async credentials => {
@@ -143,3 +140,17 @@ validateUserFx.use(async () => {
   if (result.error) throw result.error
   return result
 })
+
+const { signedIn: _, signedOut } = split(authStateChangedEvent, {
+  signedIn: event => event === 'SIGNED_IN',
+  signedOut: event => event === 'SIGNED_OUT',
+})
+
+sample({
+  clock: signedOut,
+  source: routerModel.$navigate,
+  filter: (navigate): navigate is NavigateFunction => typeof navigate === 'function',
+  target: createEffect<NavigateFunction, void>(navigate => navigate(paths.signin())),
+})
+
+debug(authStateChangedEvent)

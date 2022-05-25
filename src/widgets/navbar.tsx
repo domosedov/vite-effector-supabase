@@ -4,13 +4,16 @@ import { NavLink } from 'react-router-dom'
 import { useEvent, useStore } from 'effector-react'
 import { paths } from '~/pages'
 import { authModel } from '~/entities/auth'
+import { routerModel } from '~/shared/router'
 
 export const Navbar: React.FC = () => {
   const isSignedIn = useStore(authModel.$isSignedIn)
+  const isLoading = useStore(routerModel.$navigationLoading)
   const signOut = useEvent(authModel.signOut)
 
   return (
     <nav className='container mx-auto flex items-center space-x-2 p-2'>
+      {isLoading && <div>Loading...</div>}
       <NavLink
         className={({ isActive }) =>
           clsx(

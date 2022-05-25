@@ -3,9 +3,9 @@ import { Outlet } from 'react-router-dom'
 import { allSettled } from 'effector'
 import { Navbar } from '~/widgets/navbar'
 import { scope } from '~/scope'
-import { authModel } from '~/entities/auth'
 import type { Page } from '~/shared/types/app'
 import { NavigationWatcher } from '~/shared/router/watcher'
+import { appModel } from '~/app'
 
 export const Root: Page = () => {
   return (
@@ -22,5 +22,5 @@ export const Root: Page = () => {
 }
 
 Root.loader = async () => {
-  await allSettled(authModel.validateUser, { scope })
+  await allSettled(appModel.appStarted, { scope })
 }
