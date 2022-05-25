@@ -14,6 +14,7 @@
     "clsx": "^1.1.1",
     "effector": "^22.3.0",
     "effector-react": "^22.0.6",
+    "framer-motion": "^6.3.3",
     "patronum": "^1.8.2",
     "react": "^18.1.0",
     "react-dom": "^18.1.0",

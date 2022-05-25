@@ -12,8 +12,6 @@ export const SignInPage: Page = () => {
   )
 }
 
-SignInPage.loader = () => console.log('Sing in loader')
-
 const LoginForm: React.FC = () => {
   const signIn = useEvent(authModel.signInViaCredentials)
   const signOut = useEvent(authModel.signOut)
