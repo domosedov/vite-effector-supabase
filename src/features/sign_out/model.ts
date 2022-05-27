@@ -1,12 +1,21 @@
-import { sample } from 'effector'
+import { attach, createEvent, sample } from 'effector'
 import { paths } from '~/pages'
 import { authModel } from '~/shared/auth'
 import { routerModel } from '~/shared/router'
 
-export const signOut = authModel.signOut
+export const signOutClicked = createEvent()
+
+const navigateToSignUpPageFx = attach({
+  effect: routerModel.navigateFx,
+  mapParams: () => ({ to: paths.signup() }),
+})
 
 sample({
-  clock: signOut,
-  fn: () => ({ to: paths.signin() }),
-  target: routerModel.navigate,
+  clock: signOutClicked,
+  target: navigateToSignUpPageFx,
+})
+
+sample({
+  clock: navigateToSignUpPageFx.done,
+  target: authModel.signOut,
 })

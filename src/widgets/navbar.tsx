@@ -10,7 +10,7 @@ import { signOutFeatureModel } from '~/features/sign_out'
 export const Navbar: React.FC = () => {
   const isSignedIn = useStore(authModel.$isSignedIn)
   const isLoading = useStore(routerModel.$navigationLoading)
-  const signOut = useEvent(signOutFeatureModel.signOut)
+  const signOut = useEvent(signOutFeatureModel.signOutClicked)
 
   return (
     <nav className='container mx-auto flex items-center space-x-2 p-2'>

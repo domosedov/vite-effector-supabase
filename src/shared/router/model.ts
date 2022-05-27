@@ -1,8 +1,17 @@
-import { createEffect, createEvent, createStore, type EventPayload, sample } from 'effector'
+import {
+  createEffect,
+  createEvent,
+  createStore,
+  type EventPayload,
+  sample,
+  StoreValue,
+  attach,
+} from 'effector'
 import { createGate } from 'effector-react'
 import { debug } from 'patronum'
 import { reshape } from 'patronum/reshape'
 import type { NavigateFunction, Location, Navigation, To, NavigateOptions } from 'react-router-dom'
+import invariant from 'tiny-invariant'
 import { isBrowser } from '../env'
 import type { Nullable } from '../types/utils'
 import { isNotNull } from '../utils/is_not_null'
@@ -22,7 +31,9 @@ export const RouterGate = createGate<RouterGateProps>({
   name: 'RouterGate',
 })
 
-export const navigate = createEvent<{ to: To; options?: NavigateOptions } | number>()
+type NavigatePayload = { to: To; options?: NavigateOptions } | number
+
+export const navigate = createEvent<NavigatePayload>()
 
 export const $pathname = createStore(isBrowser ? window.location.pathname : null)
 export const $location = RouterGate.state.map(state => state.location)
@@ -46,6 +57,24 @@ export const { $navigationIdle, $navigationLoading, $navigationSubmitting } = re
   },
 })
 
+export const navigateBaseFx = createEffect<
+  { navigateFn: StoreValue<typeof $navigate>; to: EventPayload<typeof navigate> },
+  void
+>(({ navigateFn, to }) => {
+  invariant(navigateFn, '[navigateBaseFx]: navigateFn is required')
+  if (typeof to === 'number') {
+    navigateFn(to)
+  } else {
+    navigateFn(to.to, to.options)
+  }
+})
+
+export const navigateFx = attach({
+  effect: navigateBaseFx,
+  source: $navigate,
+  mapParams: (payload: NavigatePayload, navigateFn) => ({ navigateFn, to: payload }),
+})
+
 sample({
   clock: $location,
   source: $pathname,
@@ -57,20 +86,5 @@ sample({
 
 sample({
   clock: navigate,
-  source: $navigate,
-  filter: navigateFn => isNotNull(navigateFn),
-  fn: (navigateFn, to) =>
-    ({ navigateFn, to } as {
-      navigateFn: NavigateFunction
-      to: EventPayload<typeof navigate>
-    }),
-  target: createEffect<{ navigateFn: NavigateFunction; to: EventPayload<typeof navigate> }, void>(
-    ({ navigateFn, to }) => {
-      if (typeof to === 'number') {
-        navigateFn(to)
-      } else {
-        navigateFn(to.to, to.options)
-      }
-    },
-  ),
+  target: navigateFx,
 })
